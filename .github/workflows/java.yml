@@ -31,7 +31,7 @@ jobs:
                   cache: "gradle"
 
             - name: "Build project"
-              run: ./gradlew sepp-prototype:compileJava
+              run: ./gradlew src:compileJava
 
             - name: "Test project"
               run: ./gradlew test
