@@ -1,0 +1,45 @@
+name: "Java"
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: "Build"
+        runs-on: "ubuntu-latest"
+
+        strategy:
+            fail-fast: false
+            matrix:
+                java-version: [19, 21]
+
+        steps:
+            - name: "Clone repository"
+              uses: actions/checkout@v4
+
+            -   name: Set execute permissions on gradlew
+                run: chmod +x ./gradlew
+
+            - uses: actions/setup-java@v4
+              with:
+                  distribution: "temurin"
+                  java-version: ${{ matrix.java-version }}
+                  cache: "gradle"
+
+            - name: "Build project"
+              run: ./gradlew build
+
+            - name: "Test project"
+              run: ./gradlew test
+
+            - name: "Produce distribution"
+              run: ./gradlew distZip
+
+            - uses: actions/upload-artifact@v4
+              with:
+                  path: sepp_prototype/build/distributions/sepp-prototype.zip
+                  name: sepp-prototype-java-${{ matrix.java-version }}
