@@ -21,6 +21,9 @@ jobs:
             - name: "Clone repository"
               uses: actions/checkout@v4
 
+            -   name: Set execute permissions on gradlew
+                run: chmod +x ./gradlew
+
             - uses: actions/setup-java@v4
               with:
                   distribution: "temurin"
@@ -38,5 +41,5 @@ jobs:
 
             - uses: actions/upload-artifact@v4
               with:
-                  path: build/distributions/rps-2024.zip
+                  path: sepp_prototype/build/distributions/sepp-prototype.zip
                   name: rps-java-${{ matrix.java-version }}
