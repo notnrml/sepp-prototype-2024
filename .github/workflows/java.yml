@@ -31,7 +31,7 @@ jobs:
                   cache: "gradle"
 
             - name: "Build project"
-              run: ./gradlew app:compileJava
+              run: ./gradlew sepp-prototype:compileJava
 
             - name: "Test project"
               run: ./gradlew test
@@ -42,4 +42,4 @@ jobs:
             - uses: actions/upload-artifact@v4
               with:
                   path: sepp_prototype/build/distributions/sepp-prototype.zip
-                  name: rps-java-${{ matrix.java-version }}
+                  name: sepp-prototype-java-${{ matrix.java-version }}
