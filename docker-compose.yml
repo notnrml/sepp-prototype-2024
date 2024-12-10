@@ -22,6 +22,9 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./databases/postgresql/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
+      - ./databases/postgresql/populate_data.sql:/docker-entrypoint-initdb.d/populate_data.sql
 
 volumes:
-  - C:\Users\nrmls\sepp-prototype-2024\databases\postgresql\recipe_app.sql:/var/lib/postgresql/data
+  postgres_data:
+    driver: local
