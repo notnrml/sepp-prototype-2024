@@ -27,8 +27,21 @@ public abstract class BaseController {
             header.setAlignment(Pos.CENTER_LEFT);
             header.setPadding(new javafx.geometry.Insets(10));
             header.setStyle("-fx-background-color: #474a7d;");
-            return header;
+
+            logoView = new ImageView();
+            try {
+                Image logo = new Image(getClass().getResourceAsStream("/images/logo.png"));
+                logoView.setImage(logo);
+            } catch (Exception e) {
+                System.out.println("Failed to load logo image: " + e.getMessage());
+            }
+            logoView.setFitHeight(80);
+            logoView.setFitWidth(80);
+            logoView.setPreserveRatio(true);
             
+            header.getChildren().add(logoView);
+            return header;
+
         } catch (Exception e) {
             System.out.println("Error creating header: " + e.getMessage());
             e.printStackTrace();
