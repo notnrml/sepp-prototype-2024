@@ -29,7 +29,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public."Fridge_Items" (
-    "User_id" integer NOT NULL,
+    "User_id" character varying[50] NOT NULL,
     allingredient_id integer[] NOT NULL
 );
 
