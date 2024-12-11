@@ -2,33 +2,38 @@ package org.bham;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 public class HelloApplication extends Application {
-
     @Override
     public void start(Stage primaryStage) {
+        try {
+            System.out.println("Starting application...");
+            AuthenticationController auth = new AuthenticationController();
+            Scene scene = auth.getScene();
 
-        Button helloButton = new Button("Say Hello!");
+            if (scene == null) {
+                throw new RuntimeException("Scene is null");
+            }
 
+            primaryStage.setTitle("SSH APP");
+            primaryStage.setScene(scene);
+            primaryStage.setMinWidth(300);
+            primaryStage.setMinHeight(650);
+            primaryStage.show();
+            System.out.println("Application started successfully");
 
-        helloButton.setOnAction(event -> {
-            System.out.println("Hello, World!");
-        });
+        } catch (Exception e) {
+            System.out.println("Error starting application: " + e.getMessage());
+            e.printStackTrace();
 
-
-        StackPane root = new StackPane();
-        root.getChildren().add(helloButton);
-
-
-        Scene scene = new Scene(root, 300, 200);
-
-
-        primaryStage.setTitle("HelloApplication");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Startup Error");
+            alert.setHeaderText("Application Failed to Start");
+            alert.setContentText("Error: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     public static void main(String[] args) {
