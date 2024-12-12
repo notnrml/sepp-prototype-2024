@@ -38,7 +38,7 @@ public abstract class BaseController {
             logoView.setFitHeight(80);
             logoView.setFitWidth(80);
             logoView.setPreserveRatio(true);
-            
+
             header.getChildren().add(logoView);
             return header;
 
