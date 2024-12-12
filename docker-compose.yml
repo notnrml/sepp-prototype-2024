@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   app:
     build: .
@@ -9,9 +8,10 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - postgres
+      - mongo
     ports:
       - "8080:8080"
-
+  
   postgres:
     image: postgres:latest
     environment:
@@ -24,7 +24,29 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./databases/postgresql/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
       - ./databases/postgresql/populate_data.sql:/docker-entrypoint-initdb.d/populate_data.sql
+      - ./databases/postgresql/recipe_db.sql:/docker-entrypoint-initdb.d/recipe_db.sql
+      - ./databases/postgresql/user_data.sql:/docker-entrypoint-initdb.d/user_data.sql
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+        - 9090:9090    
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: mydatabase
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
 volumes:
   postgres_data:
+    driver: local
+  mongo_data:
     driver: local
