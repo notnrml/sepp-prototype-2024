@@ -1,5 +1,3 @@
-import org.gradle.api.file.DuplicatesStrategy // Required for Kotlin DSL
-
 plugins {
     id("application")
     id ("org.openjfx.javafxplugin") version ("0.0.12")
@@ -14,6 +12,9 @@ dependencies {
     //implementation("info.picocli:picocli:4.7.6")
     //implementation("io.javalin:javalin:6.3.0")
     //implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+
+    implementation ("org.mongodb:mongodb-driver-sync:4.6.0") // Or latest stable version
+    implementation ("org.mongodb:bson:4.6.0")  // Match BSON version
 
     implementation ("org.postgresql:postgresql:42.5.0")
     implementation("org.mindrot:jbcrypt:0.4")
