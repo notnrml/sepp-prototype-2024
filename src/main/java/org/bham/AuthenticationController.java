@@ -8,6 +8,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationController extends BaseController {
 
@@ -110,17 +115,42 @@ public class AuthenticationController extends BaseController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if (username.equals("bham") && password.equals("bham")) {
-            try {
-                MainPageController controller = new MainPageController();
-                Stage stage = (Stage) getRoot().getScene().getWindow();
-                stage.setScene(controller.getScene());
-            } catch (Exception e) {
-                e.printStackTrace();
-                showAlert("Error", "Failed to open main page");
+        if (username.isEmpty() || password.isEmpty()) {
+            showAlert("Invalid Input", "Please enter both username and password.");
+            return;
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT password FROM user_details WHERE \"userID\" = ?")) {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String storedHash = rs.getString("password");
+                // Convert $2b$ to $2a$ for Java's BCrypt implementation
+                String modifiedHash = storedHash.replace("$2b$", "$2a$");
+
+                try {
+                    if (BCrypt.checkpw(password, modifiedHash)) {
+                        MainPageController controller = new MainPageController();
+                        Stage stage = (Stage) getRoot().getScene().getWindow();
+                        stage.setScene(controller.getScene());
+                    } else {
+                        showAlert("Invalid Login", "Incorrect password");
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Hash before modification: " + storedHash);
+                    System.out.println("Hash after modification: " + modifiedHash);
+                    System.out.println("BCrypt error: " + e.getMessage());
+                    showAlert("Error", "Password verification failed");
+                }
+            } else {
+                showAlert("Invalid Login", "User not found");
             }
-        } else {
-            showAlert("Invalid Login", "Incorrect email or password.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Error", "Database connection error: " + e.getMessage());
         }
     }
 

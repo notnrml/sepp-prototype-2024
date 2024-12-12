@@ -16,6 +16,7 @@ dependencies {
     //implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 
     implementation ("org.postgresql:postgresql:42.5.0")
+    implementation("org.mindrot:jbcrypt:0.4")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation ("org.openjfx:javafx-controls:17.0.1")
